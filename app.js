@@ -1,4 +1,7 @@
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
 const inquirer = require('inquirer');
+
 const promptUser = () => {
     return inquirer.prompt([
         {
@@ -38,10 +41,10 @@ const promptUser = () => {
             type: 'input',
             name: 'about',
             message: 'Provide some information about yourself:',
-            when: ({confirmAbout})=>{
-                if(confirmAbout){
+            when: ({ confirmAbout }) => {
+                if (confirmAbout) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -128,19 +131,41 @@ const promptProject = portfolioData => {
 };
 
 promptUser()
-    .then(promptProject)
+    // .then(promptProject)
     .then(portfolioData => {
-        console.log(portfolioData);
-    });
+        const pageHTML = generatePage(mockData);
+
+fs.writeFile('./index.html', pageHTML, err => {
+    if(err) throw err;
+    console.log('Portfolio complete! Check out index.html to see the output');
+});
+});
+
+const mockData = {
+    name: 'Rodney',
+    github: 'rod0352',
+    confirmAbout: true,
+    about: "Im 23 and 6'0 depending on the shoes. I love cats and dogs ",
+    projects: [
+        {
+            name: 'Portfolio Generator',
+            description: 'Portoflio generator takes node.js and enables a user to generate a html portfolio in the command line, where said user is prompted for user info ',
+            languages: [Array],
+            link: 'rod0352/github.porfoliognenr',
+            feature: true,
+            confirmAddProject: true
+        },
+        {
+            name: 'Run Buddy',
+            description: 'A simple html and css page that displays skill of the artist',
+            languages: [Array],
+            link: 'runbuddy.html.github',
+            feature: true,
+            confirmAddProject: false
+        }
+    ]
+
+};
+// const pageHTML = generatePage(mockData);
 
 
-
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//     if(err) throw err;
-//     console.log('Portfolio complete! Check out index.html to see the output');
-// });
